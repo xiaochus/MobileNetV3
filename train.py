@@ -69,7 +69,7 @@ def train():
     n_class = int(cfg['class_number'])
     batch = int(cfg['batch'])
 
-    if os.path.exists(save_dir):
+    if not os.path.exists(save_dir):
         os.mkdir(save_dir)
 
     if cfg['model'] == 'large':

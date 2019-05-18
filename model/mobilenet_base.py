@@ -5,7 +5,7 @@
 
 
 from keras.layers import Conv2D, DepthwiseConv2D, Dense, GlobalAveragePooling2D
-from keras.layers import Activation, BatchNormalization, Add, Lambda
+from keras.layers import Activation, BatchNormalization, Add, Lambda, Reshape
 
 from keras import backend as K
 
@@ -81,6 +81,7 @@ class MobileNetBase:
         x = GlobalAveragePooling2D()(inputs)
         x = Dense(input_channels, activation='relu')(x)
         x = Dense(input_channels, activation='hard_sigmoid')(x)
+        x = Reshape((1, 1, input_channels))(x)
 
         return x
 
