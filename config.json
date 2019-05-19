@@ -8,5 +8,5 @@
     "epochs": 20,
     "train_dir": "data/train",
     "eval_dir": "data/eval",
-    "save_dir": "save/"
+    "save_dir": "save"
 }

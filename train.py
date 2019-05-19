@@ -94,8 +94,8 @@ def train():
         callbacks=[earlystop])
 
     df = pd.DataFrame.from_dict(hist.history)
-    df.to_csv(os.path.join('save_dir', 'hist.csv'), encoding='utf-8', index=False)
-    model.save_weights(os.path.join('save_dir', '{}_weights.h5'.format(cfg['model'])))
+    df.to_csv(os.path.join(save_dir, 'hist.csv'), encoding='utf-8', index=False)
+    model.save_weights(os.path.join(save_dir, '{}_weights.h5'.format(cfg['model'])))
 
 
 if __name__ == '__main__':
