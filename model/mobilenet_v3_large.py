@@ -21,7 +21,7 @@ class MobileNetV3_Large(MobileNetBase):
             n_class: Integer, number of classes.
 
         # Returns
-            MobileNetv2 model.
+            MobileNetv3 model.
         """
         super(MobileNetV3_Large, self).__init__(shape, n_class)
 
