@@ -108,7 +108,7 @@ class MobileNetBase:
 
         channel_axis = 1 if K.image_data_format() == 'channels_first' else -1
         input_shape = K.int_shape(inputs)
-        tchannel = input_shape[channel_axis] * e
+        tchannel = e
         r = s == 1 and input_shape[3] == filters
 
         x = self._conv_block(inputs, tchannel, (1, 1), (1, 1), nl)
