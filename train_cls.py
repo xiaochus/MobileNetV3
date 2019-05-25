@@ -61,7 +61,7 @@ def generate(batch, shape, ptrain, pval):
 
 
 def train():
-    with open('config.json', 'r') as f:
+    with open('config/config.json', 'r') as f:
         cfg = json.load(f)
 
     save_dir = cfg['save_dir']
@@ -78,6 +78,10 @@ def train():
     if cfg['model'] == 'small':
         from model.mobilenet_v3_small import MobileNetV3_Small
         model = MobileNetV3_Small(shape, n_class).build()
+
+    pre_weights = cfg['weights']
+    if pre_weights and os.path.exists(pre_weights):
+        model.load_weights(pre_weights, by_name=True)
 
     opt = Adam(lr=float(cfg['learning_rate']))
     earlystop = EarlyStopping(monitor='val_acc', patience=5, verbose=0, mode='auto')

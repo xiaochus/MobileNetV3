@@ -4,9 +4,10 @@
     "width": 224,
     "class_number": 100,
     "learning_rate": 0.001,
-    "batch": 16,
+    "batch": 2,
     "epochs": 20,
     "train_dir": "data/train",
     "eval_dir": "data/eval",
-    "save_dir": "save"
+    "save_dir": "save",
+    "weights": ""
 }
