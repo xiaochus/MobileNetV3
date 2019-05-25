@@ -115,11 +115,10 @@ class MobileNetBase:
 
         x = DepthwiseConv2D(kernel, strides=(s, s), depth_multiplier=1, padding='same')(x)
         x = BatchNormalization(axis=channel_axis)(x)
+        x = self._return_activation(x, nl)
 
         if squeeze:
             x = Lambda(lambda x: x * self._squeeze(x))(x)
-
-        x = self._return_activation(x, nl)
 
         x = Conv2D(filters, (1, 1), strides=(1, 1), padding='same')(x)
         x = BatchNormalization(axis=channel_axis)(x)
