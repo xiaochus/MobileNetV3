@@ -31,20 +31,20 @@ class LiteRASSP:
         if self.backbone == 'large':
             from model.mobilenet_v3_large import MobileNetV3_Large
 
-            model = MobileNetV3_Large(self.shape, self.n_class).build()
+            model = MobileNetV3_Large(self.shape, self.n_class, include_top=False).build()
             layer_name8 = 'batch_normalization_13'
             layer_name16 = 'add_5'
         elif self.backbone == 'small':
             from model.mobilenet_v3_small import MobileNetV3_Small
 
-            model = MobileNetV3_Small(self.shape, self.n_class).build()
+            model = MobileNetV3_Small(self.shape, self.n_class, include_top=False).build()
             layer_name8 = 'batch_normalization_7'
             layer_name16 = 'add_2'
         else:
             raise Exception('Invalid backbone: {}'.format(self.backbone))
 
         if self.weights is not None:
-            model.load_weights(self.weights)
+            model.load_weights(self.weights, by_name=True)
 
         inputs= model.input
         # 1/8 feature map.

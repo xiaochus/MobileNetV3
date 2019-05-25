@@ -12,18 +12,20 @@ from model.mobilenet_base import MobileNetBase
 
 
 class MobileNetV3_Large(MobileNetBase):
-    def __init__(self, shape, n_class):
+    def __init__(self, shape, n_class, include_top=True):
         """Init.
 
         # Arguments
             input_shape: An integer or tuple/list of 3 integers, shape
                 of input tensor.
             n_class: Integer, number of classes.
+            include_top: if inculde classification layer.
 
         # Returns
             MobileNetv3 model.
         """
         super(MobileNetV3_Large, self).__init__(shape, n_class)
+        self.include_top = include_top
 
     def build(self, plot=False):
         """build MobileNetV3 Large.
@@ -60,11 +62,12 @@ class MobileNetV3_Large(MobileNetBase):
 
         x = Conv2D(1280, (1, 1), padding='same')(x)
         x = self._return_activation(x, 'HS')
-        x = Conv2D(self.n_class, (1, 1), padding='same', activation='softmax')(x)
+        
+        if self.include_top:
+            x = Conv2D(self.n_class, (1, 1), padding='same', activation='softmax')(x)
+            x = Reshape((self.n_class,))(x)
 
-        output = Reshape((self.n_class,))(x)
-
-        model = Model(inputs, output)
+        model = Model(inputs, x)
 
         if plot:
             plot_model(model, to_file='images/MobileNetv3_large.png', show_shapes=True)
