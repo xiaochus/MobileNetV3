@@ -9,7 +9,7 @@ from model.layers.bilinear_upsampling import BilinearUpSampling2D
 
 
 class LiteRASSP:
-    def __init__(self, input_shape, n_class=19, weights=None, backbone='small'):
+    def __init__(self, input_shape, n_class=19, alpha=1.0, weights=None, backbone='small'):
         """Init.
 
         # Arguments
@@ -17,11 +17,13 @@ class LiteRASSP:
                 of input tensor (should be 1024 × 2048 or 512 × 1024 according 
                 to the paper).
             n_class: Integer, number of classes.
+            alpha: Integer, width multiplier for mobilenetV3.
             weights: String, weights for mobilenetv3.
             backbone: String, name of backbone (must be small or large).
         """
         self.shape = input_shape
         self.n_class = n_class
+        self.alpha = alpha
         self.weights = weights
         self.backbone = backbone
 
@@ -31,13 +33,13 @@ class LiteRASSP:
         if self.backbone == 'large':
             from model.mobilenet_v3_large import MobileNetV3_Large
 
-            model = MobileNetV3_Large(self.shape, self.n_class, include_top=False).build()
+            model = MobileNetV3_Large(self.shape, self.n_class, alpha=self.alpha, include_top=False).build()
             layer_name8 = 'batch_normalization_13'
             layer_name16 = 'add_5'
         elif self.backbone == 'small':
             from model.mobilenet_v3_small import MobileNetV3_Small
 
-            model = MobileNetV3_Small(self.shape, self.n_class, include_top=False).build()
+            model = MobileNetV3_Small(self.shape, self.n_class, alpha=self.alpha, include_top=False).build()
             layer_name8 = 'batch_normalization_7'
             layer_name16 = 'add_2'
         else:

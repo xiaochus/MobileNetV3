@@ -11,9 +11,18 @@ from keras import backend as K
 
 
 class MobileNetBase:
-    def __init__(self, shape, n_class):
+    def __init__(self, shape, n_class, alpha=1.0):
+        """Init
+        
+        # Arguments
+            input_shape: An integer or tuple/list of 3 integers, shape
+                of input tensor.
+            n_class: Integer, number of classes.
+            alpha: Integer, width multiplier.
+        """
         self.shape = shape
         self.n_class = n_class
+        self.alpha = alpha
 
     def _relu6(self, x):
         """Relu 6
@@ -108,7 +117,10 @@ class MobileNetBase:
 
         channel_axis = 1 if K.image_data_format() == 'channels_first' else -1
         input_shape = K.int_shape(inputs)
-        tchannel = e
+
+        tchannel = int(e)
+        cchannel = int(self.alpha * filters)
+
         r = s == 1 and input_shape[3] == filters
 
         x = self._conv_block(inputs, tchannel, (1, 1), (1, 1), nl)
@@ -120,7 +132,7 @@ class MobileNetBase:
         if squeeze:
             x = Lambda(lambda x: x * self._squeeze(x))(x)
 
-        x = Conv2D(filters, (1, 1), strides=(1, 1), padding='same')(x)
+        x = Conv2D(cchannel, (1, 1), strides=(1, 1), padding='same')(x)
         x = BatchNormalization(axis=channel_axis)(x)
 
         if r:
