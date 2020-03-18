@@ -4,8 +4,7 @@ import pandas as pd
 
 from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
-from keras.callbacks import EarlyStopping
-
+from keras.callbacks import EarlyStopping, ModelCheckpoint
 
 def generate(batch, shape, ptrain, pval):
     """Data generation and augmentation
@@ -85,6 +84,9 @@ def train():
 
     opt = Adam(lr=float(cfg['learning_rate']))
     earlystop = EarlyStopping(monitor='val_acc', patience=5, verbose=0, mode='auto')
+    checkpoint = ModelCheckpoint(filepath=os.path.join(save_dir, '{}_weights.h5'.format(cfg['model'])),
+                 monitor='val_acc', save_best_only=True, save_weights_only=True)
+    
     model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 
     train_generator, validation_generator, count1, count2 = generate(batch, shape[:2], cfg['train_dir'], cfg['eval_dir'])
@@ -95,11 +97,11 @@ def train():
         steps_per_epoch=count1 // batch,
         validation_steps=count2 // batch,
         epochs=cfg['epochs'],
-        callbacks=[earlystop])
+        callbacks=[earlystop,checkpoint])
 
     df = pd.DataFrame.from_dict(hist.history)
     df.to_csv(os.path.join(save_dir, 'hist.csv'), encoding='utf-8', index=False)
-    model.save_weights(os.path.join(save_dir, '{}_weights.h5'.format(cfg['model'])))
+    #model.save_weights(os.path.join(save_dir, '{}_weights.h5'.format(cfg['model'])))
 
 
 if __name__ == '__main__':
